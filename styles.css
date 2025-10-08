@@ -147,19 +147,35 @@ body {
     align-items: center;
 }
 
-.input-wrapper i {
+.input-wrapper i.fa-lock,
+.input-wrapper i.fa-user {
     position: absolute;
     left: 1rem;
     color: var(--text-muted);
     z-index: 1;
 }
 
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0;
+}
+
+.toggle-password:hover {
+  color: #000;
+}
+
 .input-wrapper input {
     width: 100%;
-    padding: 0.75rem 1rem 0.75rem 2.5rem;
+    padding: 10px 40px 10px 35px;
     border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
-    background: var(--bg-primary);
+    border-radius: 8px;
+    background: 14px;
     color: var(--text-primary);
     font-size: 0.875rem;
     transition: var(--transition);
