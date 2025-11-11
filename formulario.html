@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório de Não Conformidade (RNC)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #28a745; 
+            --bg-color: #f0f4f8;
+            --card-bg: #ffffff;
+            --border-color: #e0e0e0;
+            --text-color: #333;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 900px;
+            background-color: var(--card-bg);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid var(--secondary-color);
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin: 0;
+        }
+
+        .header .info {
+            display: flex;
+            gap: 20px;
+        }
+
+        .field-group {
+            margin-bottom: 20px;
+        }
+
+        .field-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--primary-color);
+        }
+
+        .field-group input[type="text"],
+        .field-group textarea,
+        .field-group input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            box-sizing: border-box;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: var(--bg-color);
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .field-group input[type="text"]:focus,
+        .field-group textarea:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            outline: none;
+        }
+
+        .field-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .section-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: var(--primary-color);
+            border-left: 4px solid var(--secondary-color);
+            padding-left: 10px;
+            margin-bottom: 25px;
+            margin-top: 35px;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        /* Estilos para o novo layout de imagem e descrição */
+        .image-columns-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .image-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Duas colunas de tamanho igual */
+            gap: 20px;
+            border: 1px dashed var(--border-color);
+            padding: 20px;
+            border-radius: 8px;
+            align-items: flex-start;
+        }
+        
+        .image-preview {
+            max-width: 100%;
+            height: auto;
+            margin-top: 10px;
+            border-radius: 8px;
+            display: none; /* Inicia escondido */
+        }
+
+        .image-upload-button {
+            background-color: #218838;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s, transform 0.2s;
+            margin-top: 20px;
+        }
+
+        
+
+        .image-upload-button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        /* --- INÍCIO DA ADIÇÃO --- */
+        .delete-image-button {
+            background-color: #e74c3c; /* Vermelho */
+            color: white;
+            border: none;
+            padding: 8px 12px; /* Um pouco menor que os botões principais */
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+            float: right; /* Alinha o botão à direita */
+        }
+
+        .delete-image-button:hover {
+            background-color: #c0392b;
+        }
+
+        /* Adiciona um 'clearfix' ao field-group para conter o botão flutuante */
+        .field-group::after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        /* --- INÍCIO DOS ESTILOS DE RÁDIO ADICIONADOS --- */
+        .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .radio-item label {
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .radio-item input[type="radio"] {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--primary-color);
+            border-radius: 50%; /* Redondo para radio button */
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        
+        .radio-item input[type="radio"]:checked {
+            border-color: var(--secondary-color);
+        }
+
+        /* O "ponto" no meio do rádio */
+        .radio-item input[type="radio"]:checked::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background-color: var(--secondary-color);
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        /* --- FIM DOS ESTILOS DE RÁDIO --- */
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--primary-color);
+            border-radius: 4px;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        
+        .checkbox-item input[type="checkbox"]:checked {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+
+        .checkbox-item input[type="checkbox"]:checked::after {
+            content: '✔';
+            color: white;
+            font-size: 14px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* CSS para o Logo no Header */
+        .header-title-group {
+            display: flex;
+            align-items: center;
+            gap: 15px; /* Espaçamento entre o logo e o título */
+        }
+
+        .header-logo {
+            height: 60px; /* Você pode ajustar essa altura */
+            width: auto;
+            border-radius: 50%; /* Para manter o formato redondo do logo */
+        }
+
+        /* Ajuste no título para telas menores (opcional) */
+        .header h1 {
+            font-size: 1.5em; /* Um pouco menor para caber melhor ao lado do logo */
+        }
+
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div class="header">
+            <div class="header-title-group">
+                <img src="logo_ccs.png" alt="Logo SST CCS-UFRJ" class="header-logo">
+                <h1>RNC - RELATÓRIO DE NÃO CONFORMIDADE</h1>
+            </div>
+            <div class="info">
+                <div class="field-group">
+                    <label for="numero">Nº:</label>
+                    <input type="text" id="numero" name="numero">
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="field-group">
+                <label for="data-abertura">DATA DE ABERTURA</label>
+                <input type="text" id="data-abertura" name="data-abertura" placeholder="dd/mm/aaaa">
+            </div>
+            <div class="field-group">
+                <label for="data-fechamento">DATA DE FECHAMENTO</label>
+                <input type="text" id="data-fechamento" name="data-fechamento" placeholder="dd/mm/aaaa">
+            </div>
+        </div>
+
+        <h2 class="section-title">TIPO DE RELATÓRIO</h2>
+        <div class="field-group">
+            <label>ORIGEM DA NÃO CONFORMIDADE</label>
+            <div class="radio-group">
+                <div class="radio-item">
+                    <input type="radio" id="processo" name="origem" value="processo">
+                    <label for="processo">PROCESSO</label>
+                </div>
+                <div class="radio-item">
+                    <input type="radio" id="acidente" name="origem" value="acidente">
+                    <label for="acidente">ACIDENTE / INCIDENTE</label>
+                </div>
+                <div class="radio-item">
+                    <input type="radio" id="meio-ambiente" name="origem" value="meio-ambiente">
+                    <label for="meio-ambiente">MEIO AMBIENTE</label>
+                </div>
+                <div class="radio-item">
+                    <input type="radio" id="auditoria" name="origem" value="auditoria">
+                    <label for="auditoria">AUDITORIA INTERNA</label>
+                </div>
+                <div class="radio-item">
+                    <input type="radio" id="reclamacao" name="origem" value="reclamacao">
+                    <label for="reclamacao">RECLAMAÇÃO CLIENTE</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="field-group">
+                <label for="responsavel">RESPONSÁVEL:</label>
+                <input type="text" id="responsavel" name="responsavel">
+            </div>
+            <div class="field-group">
+                <label for="cargo">CARGO</label>
+                <input type="text" id="cargo" name="cargo">
+            </div>
+            <div class="field-group">
+                <label for="setor">SETOR</label>
+                <input type="text" id="setor" name="setor">
+            </div>
+            <div class="field-group">
+                <label for="matricula">MATRÍCULA</label>
+                <input type="text" id="matricula" name="matricula">
+            </div>
+        </div>
+
+        <h2 class="section-title">ANÁLISE</h2>
+        <div class="field-group">
+            <label for="descricao-ocorrencia">DESCRIÇÃO DA OCORRÊNCIA</label>
+            <textarea id="descricao-ocorrencia" name="descricao-ocorrencia"></textarea>
+        </div>
+        <div class="field-group">
+            <label for="descricao-nao-conformidade">DESCRIÇÃO DA NÃO CONFORMIDADE/CAUSAS PROVÁVEIS</label>
+            <textarea id="descricao-nao-conformidade" name="descricao-nao-conformidade"></textarea>
+        </div>
+        <div class="field-group">
+            <label for="referencias">REFERÊNCIAS NORMATIVAS:</label>
+            <input type="text" id="referencias" name="referencias">
+        </div>
+
+        <h2 class="section-title">TOMADA DE AÇÕES</h2>
+        <div class="field-group">
+            <label for="acoes-corretivas">AÇÕES CORRETIVAS A SEREM TOMADAS</label>
+            <textarea id="acoes-corretivas" name="acoes-corretivas"></textarea>
+        </div>
+        <div class="field-group">
+            <label for="responsavel-acoes">RESPONSÁVEL</label>
+            <input type="text" id="responsavel-acoes" name="responsavel-acoes">
+        </div>
+        <div class="field-group">
+            <label for="acoes-preventivas">AÇÕES PREVENTIVAS, quando aplicáveis</label>
+            <textarea id="acoes-preventivas" name="acoes-preventivas"></textarea>
+        </div>
+        <div class="field-group">
+            <label for="responsavel-acoes-prev">RESPONSÁVEL</label>
+            <input type="text" id="responsavel-acoes-prev" name="responsavel-acoes-prev">
+        </div>
+        
+        <h2 class="section-title">REGISTRO ICONOGRÁFICO</h2>
+        <div id="image-columns-container" class="image-columns-container">
+            </div>
+        
+        <button id="add-image-btn" class="image-upload-button">Adicionar Imagem</button>
+    <div style="margin-top: 40px; text-align: right;">
+    <button id="salvar-rnc-btn" class="image-upload-button" style="background-color: #28a745;">
+        Salvar RNC
+    </button>
+</div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('image-columns-container');
+            const addButton = document.getElementById('add-image-btn');
+            let imageCounter = 1;
+
+            // Esta função varre todas as colunas de imagem restantes e
+            // re-numera seus IDs, labels, names, etc., para que fiquem sequenciais.
+            const reindexImageColumns = () => {
+                const allColumns = container.querySelectorAll('.image-column');
+                
+                allColumns.forEach((column, index) => {
+                    const newIndex = index + 1; // O novo número (começa em 1)
+
+                    // Encontra todos os elementos dentro desta coluna
+                    const fileLabel = column.querySelector('label[for^="imagem"]');
+                    const fileInput = column.querySelector('input[type="file"]');
+                    const previewImg = column.querySelector('.image-preview');
+                    const descLabel = column.querySelector('label[for^="desc-img"]');
+                    const descInput = column.querySelector('input[type="text"]');
+
+                    // Atualiza a seção de input de arquivo
+                    if (fileLabel) {
+                        fileLabel.textContent = `Imagem ${newIndex}`;
+                        fileLabel.setAttribute('for', `imagem${newIndex}`);
+                    }
+                    if (fileInput) {
+                        fileInput.id = `imagem${newIndex}`;
+                        fileInput.name = `imagem${newIndex}`;
+                    }
+                    if (previewImg) {
+                        previewImg.id = `preview${newIndex}`;
+                        previewImg.alt = `Preview Imagem ${newIndex}`;
+                    }
+
+                    // Atualiza a seção de input de descrição
+                    if (descLabel) {
+                        descLabel.textContent = `Descrição Imagem ${newIndex}`;
+                        descLabel.setAttribute('for', `desc-img${newIndex}`);
+                    }
+                    if (descInput) {
+                        descInput.id = `desc-img${newIndex}`;
+                        descInput.name = `desc-img${newIndex}`;
+                    }
+                });
+
+                // Atualiza o contador global para o próximo item a ser adicionado
+                imageCounter = allColumns.length + 1;
+            };
+
+
+            // Função para criar uma nova coluna de imagem e descrição
+            const createImageColumn = () => {
+                // Pega o número atual ANTES de incrementar
+                const currentImageIndex = imageCounter;
+
+                const column = document.createElement('div');
+                column.className = 'image-column';
+
+                const imageFieldContainer = document.createElement('div');
+                imageFieldContainer.className = 'field-group';
+                imageFieldContainer.innerHTML = `
+                    <label for="imagem${currentImageIndex}">Imagem ${currentImageIndex}</label>
+                    <input type="file" id="imagem${currentImageIndex}" name="imagem${currentImageIndex}" accept="image/*">
+                    <img id="preview${currentImageIndex}" class="image-preview" src="#" alt="Preview Imagem ${currentImageIndex}">
+                `;
+
+                const descriptionFieldGroup = document.createElement('div');
+                descriptionFieldGroup.className = 'field-group';
+                descriptionFieldGroup.innerHTML = `
+                    <label for="desc-img${currentImageIndex}">Descrição Imagem ${currentImageIndex}</label>
+                    <input type="text" id="desc-img${currentImageIndex}" name="desc-img${currentImageIndex}">
+                `;
+
+                // (Isso é da sua solicitação anterior)
+                const deleteButton = document.createElement('button');
+                deleteButton.type = 'button';
+                deleteButton.textContent = 'Excluir Imagem';
+                deleteButton.className = 'delete-image-button';
+
+                // Modificado para chamar a reindexação
+                deleteButton.addEventListener('click', () => {
+                    column.remove(); // Remove a coluna
+                    reindexImageColumns(); // Chama a nova função para re-numerar
+                });
+
+                descriptionFieldGroup.appendChild(deleteButton);
+
+                column.appendChild(imageFieldContainer);
+                column.appendChild(descriptionFieldGroup);
+
+                container.appendChild(column);
+                
+                // Adiciona o event listener para o novo input de arquivo
+                const fileInput = document.getElementById(`imagem${currentImageIndex}`);
+                const previewImg = document.getElementById(`preview${currentImageIndex}`);
+
+                fileInput.addEventListener('change', (event) => {
+                    const file = event.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            previewImg.src = e.target.result;
+                            previewImg.style.display = 'block';
+                            previewImg.dataset.base64 = e.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+                        // Se o usuário cancelar, limpa o preview
+                        previewImg.src = '#';
+                        previewImg.style.display = 'none';
+                        delete previewImg.dataset.base64;
+                    }
+                });
+
+                // Incrementa o contador global para a próxima chamada
+                imageCounter++;
+            };
+
+            // Adiciona a primeira coluna ao carregar a página
+            createImageColumn();
+
+            // Adiciona um listener para o botão de adicionar imagem
+            addButton.addEventListener('click', createImageColumn);
+        });
+    </script>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+        const salvarBtn = document.getElementById("salvar-rnc-btn");
+
+        // Função para obter todos os dados do formulário
+        function getFormData() {
+    const data = {};
+    // Pega os inputs normais (texto, radio, etc)
+    document.querySelectorAll("input:not([type='file']), textarea, select").forEach(input => {
+        if (input.type === "radio") {
+            if (input.checked) data[input.name] = input.value;
+        } else if (input.type === "checkbox") {
+            if (!data[input.name]) data[input.name] = [];
+            if (input.checked) data[input.name].push(input.value);
+        } else {
+            data[input.id || input.name] = input.value;
+        }
+    });
+
+    // Pega as imagens em base64 salvas no dataset
+    document.querySelectorAll('.image-preview').forEach(imgPreview => {
+        if (imgPreview.dataset.base64) {
+            // Salva a imagem com uma chave única, ex: 'imagem1_base64'
+            data[imgPreview.id + '_base64'] = imgPreview.dataset.base64;
+        }
+    });
+
+    return data;
+}
+
+        // Função para preencher o formulário com dados salvos
+        function fillForm(data) {
+    if (!data) return;
+    Object.keys(data).forEach(key => {
+        // Se a chave for de uma imagem base64
+        if (key.endsWith('_base64')) {
+            const previewId = key.replace('_base64', '');
+            const previewImg = document.getElementById(previewId);
+            if (previewImg) {
+                previewImg.src = data[key]; // Coloca a imagem no 'src'
+                previewImg.dataset.base64 = data[key]; // Guarda o base64 novamente
+                previewImg.style.display = 'block'; // Garante que a imagem está visível
+            }
+            return; // Pula para a próxima chave
+        }
+
+        const field = document.getElementById(key) || document.querySelector(`[name='${key}']`);
+        if (!field) return;
+
+        if (Array.isArray(data[key])) {
+            data[key].forEach(val => {
+                const checkbox = document.querySelector(`[name='${key}'][value='${val}']`);
+                if (checkbox) checkbox.checked = true;
+            });
+        } else if (field.type === "radio") {
+            const radio = document.querySelector(`[name='${key}'][value='${data[key]}']`);
+            if (radio) radio.checked = true;
+        } else {
+            // Não preenche o input de arquivo, pois já cuidamos da imagem
+            if (field.type !== 'file') {
+               field.value = data[key];
+            }
+        }
+    });
+}
+
+        // Verificar se há um ID na URL (modo visualização)
+        const urlParams = new URLSearchParams(window.location.search);
+        const formId = urlParams.get("id");
+
+        if (formId) {
+            const savedForms = JSON.parse(localStorage.getItem("forms")) || [];
+            const formData = savedForms.find(f => f.id == formId);
+            if (formData) fillForm(formData.data);
+        }
+
+        // Ação do botão Salvar
+        if (salvarBtn) {
+            salvarBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+
+                const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+                const userName = currentUser ? currentUser.name : "Usuário Desconhecido";
+
+                const data = getFormData();
+                const forms = JSON.parse(localStorage.getItem("forms")) || []; //
+                
+                // Encontra o ID mais alto na lista atual
+                let maxId = 0;
+                if (forms.length > 0) {
+                    maxId = forms.reduce((max, form) => (form.id > max ? form.id : max), 0);
+                }
+                const newId = maxId + 1;
+                // --- FIM DA NOVA LÓGICA ---
+
+                const newForm = {
+                    id: newId, // <-- ID alterado
+                    title: data.numero ? `RNC #${data.numero}` : "Relatório de Não Conformidade",
+                    description: data.responsavel || "RNC preenchido",
+                    status: "completed",
+                    createdAt: new Date().toISOString(),
+                    updatedAt: newtoISOString(),
+                    createdBy: userName,
+                    type: "RNC",
+                    data: data 
+                };
+
+                forms.unshift(newForm); //
+                localStorage.setItem("forms", JSON.stringify(forms)); //
+
+                alert("RNC salva com sucesso! Você pode visualizá-la no Dashboard.");
+            });
+        }
+    });
+</script>
+</body>
+</html>
